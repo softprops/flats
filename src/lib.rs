@@ -1,5 +1,5 @@
 //! `flats` is a crate that transforms nested serde `Serialize` types into a one dimensional,
-//! flat map keys and values.
+//! flat map of keys and values.
 //! Nested structures are represented as map keys that represent structual paths to values
 //!
 //! ```rust
