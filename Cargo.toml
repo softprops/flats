@@ -2,6 +2,17 @@
 name = "flats"
 version = "0.1.0"
 authors = ["softprops <d.tangren@gmail.com>"]
+description = "flattens nested structures into a flat single dimension map"
+documentation = "https://softprops.github.io/flats"
+homepage = "https://github.com/softprops/flats"
+repository = "https://github.com/softprops/flats"
+license = "MIT"
+readme = "README.md"
+
+[badges]
+travis-ci = { repository = "softprops/flats" }
+coveralls = { repository = "softprops/flats" }
+maintenance = { status = "actively-developed" }
 
 [dev_dependencies]
 maplit = "1.0"
