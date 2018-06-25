@@ -21,10 +21,16 @@ use serde_json::Value;
 mod scalar;
 pub use scalar::Scalar;
 
-pub fn flatten<S>(target: S) -> BTreeMap<String, Scalar>
+/// Flattens nested structures into one dimentional map
+pub fn flatten<S>(nested: S) -> serde_json::Result<BTreeMap<String, Scalar>>
 where
     S: Serialize,
 {
+    Ok(flatten_value(serde_json::to_value(nested)?))
+}
+
+/// Flattens nested `serde_json::Value`  into one dimentional map
+pub fn flatten_value(value: Value) -> BTreeMap<String, Scalar> {
     fn fold<'a>(
         result: &'a mut BTreeMap<String, Scalar>,
         val: Value,
@@ -68,11 +74,7 @@ where
         };
         result
     }
-    fold(
-        &mut BTreeMap::new(),
-        serde_json::to_value(target).unwrap(),
-        None,
-    ).clone()
+    fold(&mut BTreeMap::new(), value, None).clone()
 }
 
 #[cfg(test)]
@@ -87,7 +89,7 @@ mod tests {
                     "baz" => 3
                 }
             }
-        });
+        }).unwrap();
         assert_eq!(
             result,
             btreemap! {
@@ -104,7 +106,7 @@ mod tests {
                     "baz" => 3
                 }
             }
-        });
+        }).unwrap();
         assert_eq!(
             serde_json::to_string(&result).unwrap(),
             r#"{"foo.bar.baz":3}"#

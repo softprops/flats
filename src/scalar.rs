@@ -7,6 +7,7 @@ use std::fmt;
 // Third Party
 use serde_json;
 
+/// Container for single, scalar values
 #[derive(Debug, PartialEq, Serialize, Clone)]
 #[serde(untagged)]
 pub enum Scalar {
