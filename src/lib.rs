@@ -105,7 +105,7 @@ pub fn flatten_value(value: Value) -> BTreeMap<String, Scalar> {
         };
         result
     }
-    fold(&mut BTreeMap::new(), value, None).clone()
+    fold(&mut BTreeMap::new(), value, None).to_owned()
 }
 
 #[cfg(test)]
