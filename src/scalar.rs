@@ -7,13 +7,17 @@ use std::fmt;
 // Third Party
 use serde_json;
 
-/// Container for single, scalar values
+/// Container for singlar, scalar values
 #[derive(Debug, PartialEq, Serialize, Clone)]
 #[serde(untagged)]
 pub enum Scalar {
+  /// A single boolean value
   Bool(bool),
+  /// a single numeric value
   Number(serde_json::Number),
+  /// a single string value
   String(String),
+  /// A null value (only particular to json serialized data)
   Null,
 }
 

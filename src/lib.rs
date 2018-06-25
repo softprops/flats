@@ -33,13 +33,17 @@
 //!  assert_eq!(expected, flat);
 //! }
 //! ```
+
+#![deny(missing_docs)]
+
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;
-extern crate serde_json;
 #[cfg(test)]
 #[macro_use]
-extern crate maplit;
+extern crate serde_json;
+#[cfg(not(test))]
+extern crate serde_json;
 
 // Std Lib
 use std::collections::BTreeMap;
@@ -55,7 +59,10 @@ pub use scalar::Scalar;
 // re-export exposed type
 pub use serde_json::Result;
 
-/// Flattens nested structures into one dimensional map
+/// Flattens nested structures into a one dimensional map
+///
+/// This first serializes the structure to a `serde_json::Value`
+/// which may fail, hence the `Result` type.
 pub fn flatten<S>(nested: S) -> Result<BTreeMap<String, Scalar>>
 where
     S: Serialize,
@@ -63,7 +70,7 @@ where
     serde_json::to_value(nested).map(flatten_value)
 }
 
-/// Flattens nested `serde_json::Value` into one dimensional map
+/// Flattens nested `serde_json::Value` instances into a one dimensional map
 pub fn flatten_value(value: Value) -> BTreeMap<String, Scalar> {
     fn fold<'a>(
         result: &'a mut BTreeMap<String, Scalar>,
@@ -113,34 +120,32 @@ pub fn flatten_value(value: Value) -> BTreeMap<String, Scalar> {
 
 #[cfg(test)]
 mod tests {
-    use super::{flatten, serde_json};
+    use super::{flatten, serde_json, Scalar};
+    use std::collections::BTreeMap;
 
     #[test]
     fn flattens_nested_maps() {
-        let result = flatten(hashmap! {
-            "foo" => hashmap!{
-                "bar" => hashmap! {
-                    "baz" => 3
+        let result = flatten(json!({
+            "foo": {
+                "bar": {
+                    "baz": 3
                 }
             }
-        }).unwrap();
-        assert_eq!(
-            result,
-            btreemap! {
-                String::from("foo.bar.baz") => 3.into()
-            }
-        )
+        })).unwrap();
+        let mut expected: BTreeMap<String, Scalar> = BTreeMap::new();
+        expected.insert("foo.bar.baz".into(), 3.into());
+        assert_eq!(result, expected)
     }
 
     #[test]
     fn flattens_to_serializable() {
-        let result = flatten(hashmap! {
-            "foo" => hashmap!{
-                "bar" => hashmap! {
-                    "baz" => 3
+        let result = flatten(json!({
+            "foo": {
+                "bar": {
+                    "baz": 3
                 }
             }
-        }).unwrap();
+        })).unwrap();
         assert_eq!(
             serde_json::to_string(&result).unwrap(),
             r#"{"foo.bar.baz":3}"#

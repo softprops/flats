@@ -14,9 +14,6 @@ travis-ci = { repository = "softprops/flats" }
 coveralls = { repository = "softprops/flats" }
 maintenance = { status = "actively-developed" }
 
-[dev_dependencies]
-maplit = "1.0"
-
 [dependencies]
 serde = "1.0"
 serde_derive = "1.0"
