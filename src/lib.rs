@@ -2,6 +2,37 @@
 //! flat map keys and values.
 //! Nested structures are represented as map keys that represent structual paths to values
 //!
+//! ```rust
+//! #[macro_use]
+//! extern crate serde_json;
+//! extern crate flats;
+//!
+//! use std::collections::BTreeMap;
+//! use flats::{flatten_value, Scalar};
+//!
+//! fn main() {
+//!   let flat: BTreeMap<String, Scalar> = flatten_value(
+//!     json!({
+//!       "name": "John Doe",
+//!       "address": {
+//!           "city": "nyc"
+//!       },
+//!       "phones": [
+//!         "+44 1234567",
+//!         "+44 2345678"
+//!       ]
+//!     })
+//!  );
+//!
+//!  let mut expected: BTreeMap<String, Scalar> = BTreeMap::new();
+//!  expected.insert("name".into(), "John Doe".into());
+//!  expected.insert("address.city".into(), "nyc".into());
+//!  expected.insert("phones[0]".into(), "+44 1234567".into());
+//!  expected.insert("phones[1]".into(), "+44 2345678".into());
+//!
+//!  assert_eq!(expected, flat);
+//! }
+//! ```
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;
