@@ -21,7 +21,7 @@ use serde_json::Value;
 mod scalar;
 pub use scalar::Scalar;
 
-/// Flattens nested structures into one dimentional map
+/// Flattens nested structures into one dimensional map
 pub fn flatten<S>(nested: S) -> serde_json::Result<BTreeMap<String, Scalar>>
 where
     S: Serialize,
@@ -29,7 +29,7 @@ where
     Ok(flatten_value(serde_json::to_value(nested)?))
 }
 
-/// Flattens nested `serde_json::Value`  into one dimentional map
+/// Flattens nested `serde_json::Value` into one dimensional map
 pub fn flatten_value(value: Value) -> BTreeMap<String, Scalar> {
     fn fold<'a>(
         result: &'a mut BTreeMap<String, Scalar>,
