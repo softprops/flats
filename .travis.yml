@@ -1,0 +1,37 @@
+sudo: required
+language: rust
+matrix:
+  fast_finish: true
+  include:
+    - rust: nightly
+    - rust: beta
+    - rust: stable
+  allow_failures:
+    - rust: nightly
+script:
+  - cargo test
+before_cache:
+  - chmod -R a+r $HOME/.cargo
+cache:
+  cargo: true
+  apt: true
+  directories:
+    - target/debug/deps
+    - target/debug/build
+addons:
+  apt:
+    packages:
+      - libssl-dev
+after_success:
+  - |-
+    [ $TRAVIS_RUST_VERSION = stable ] && (
+      bash <(curl https://raw.githubusercontent.com/xd009642/tarpaulin/master/travis-install.sh) && cargo tarpaulin --ciserver travis-ci --coveralls $TRAVIS_JOB_ID
+    ) || true
+  - >-
+    [ $TRAVIS_RUST_VERSION = stable ] && [ $TRAVIS_BRANCH = master ] && [
+    $TRAVIS_PULL_REQUEST = false ] && cargo doc --no-deps && echo "<meta
+    http-equiv=refresh content=0;url=`echo $TRAVIS_REPO_SLUG | cut -d / -f
+    2`/index.html>" > target/doc/index.html && pip install --user ghp-import &&
+    /home/travis/.local/bin/ghp-import -n target/doc && git push -fq
+    https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages && echo
+    "documented"
