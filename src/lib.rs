@@ -52,12 +52,15 @@ use serde_json::Value;
 mod scalar;
 pub use scalar::Scalar;
 
+// re-export exposed type
+pub use serde_json::Result;
+
 /// Flattens nested structures into one dimensional map
-pub fn flatten<S>(nested: S) -> serde_json::Result<BTreeMap<String, Scalar>>
+pub fn flatten<S>(nested: S) -> Result<BTreeMap<String, Scalar>>
 where
     S: Serialize,
 {
-    Ok(flatten_value(serde_json::to_value(nested)?))
+    serde_json::to_value(nested).map(flatten_value)
 }
 
 /// Flattens nested `serde_json::Value` into one dimensional map
