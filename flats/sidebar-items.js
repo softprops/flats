@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Scalar","Container for singlar, scalar values"]],"fn":[["flatten","Flattens nested structures into a one dimensional map"],["flatten_value","Flattens nested `serde_json::Value` instances into a one dimensional map"]],"type":[["Result","Alias for a `Result` with the error type `serde_json::Error`."]]});
