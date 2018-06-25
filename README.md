@@ -11,7 +11,7 @@ Add the following to your cargo project's `Cargo.toml` file.
 flats = "0.1"
 ```
 
-## Usage
+## 🤸 usage
 
 ```rust
 #[macro_use]
